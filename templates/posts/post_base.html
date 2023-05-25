@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block body %}
+		<div style="text-align: right;">
+        <form method="GET" action="{% url 'posts:index' %}">
+            <input type="text" name="keyword">
+            <button type="submit">検索</button>
+        </form>
+		</div>
+		
+		
+    
+        <h1>神戸電子お悩み相談室</h1>
+        <div style="text-align: right;">
+        <a href="{% url 'posts:write' %}">新規悩み相談書き込み</a>
+        </div>
+        <hr>
+        {% block content %}
+        {% endblock %}
+        
+        <style type="text/css">
+        h1 {
+		color: #FF1A6F;
+		}
+        </style>
+
+{% endblock %}

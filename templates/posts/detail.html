@@ -1,0 +1,191 @@
+{% extends "base.html" %}
+{% load static %}
+{% block body %}
+<div style="text-align: right;">
+<h5>{{ post.created_at }}投稿</h5>
+</div>
+<font size="6">
+            {% if post.user.icon %}
+			<img src="{{ post.user.icon.url }}" class="user-icon">
+			{% else %}
+			<img src="{% static 'images/black.png' %}" class="user-icon">
+			{% endif %}
+			{{ post.user.full_name }}</font>
+
+<div style="text-align: center;">
+<h1>{{ post.title | linebreaksbr}}</h1>
+</div>
+<div style="text-align: right;">
+<h5>{{ post.category }}</h5>
+</div>
+{% if post.complete %}
+{% else %}
+{% if request.user == post.user %}
+<div style="text-align: right;">
+<h5><a href="{% url 'posts:complete' pk=post.pk %}" >解決しました！</a></h5>
+</div>
+{% endif %}
+{% endif %}
+
+<hr>
+<h4 class="section-title">質問内容</h4>
+<br>
+<div style="text-align: left;">
+<h3>{{ post.text | linebreaksbr}}</h3>
+</div>
+<div>
+                {% if post.image %}
+                {% if post.imgcategory.name|stringformat:"s"  == "右" %}
+		<div style="text-align: right;">
+		<img src="{{post.image.url}}" class="user">
+			</div>
+		{% elif post.imgcategory.name|stringformat:"s"  == "真ん中" %}
+		<div style="text-align: center;">
+		<img src="{{post.image.url}}" class="user">
+			</div>
+		{% else %}
+		<img src="{{post.image.url}}" class="user">
+		{% endif %}
+
+{% else %}
+{% endif %}
+
+</div>
+<br>
+<div style="text-align: right;">
+		<a href="{% url 'posts:index' %}">悩み一覧画面に戻る</a>
+	</div>
+		<hr>
+        <h3 class="section-title">Comment</h3>
+        <br>
+        <div style="text-align: center;">
+        <h5><a href="{% url 'posts:comment_create' post.pk %}" rel="nofollow">質問にコメントする</a></h5>
+		</div>
+		<br>
+        {% for comment in post.comment_set.all %}
+        {% if comment.is_public %}
+        <hr>
+        <font size="6">
+            	{% if comment.user == post.user %}
+				<div>
+				<h5>質問投稿者</h5>
+				</div>
+				{% endif %}
+                <div>
+            {% if comment.user.icon %}
+			<img src="{{ comment.user.icon.url }}" class="user-icon">
+			{% else %}
+			<img src="{% static 'images/black.png' %}" class="user-icon">
+			{% endif %}
+			<h4>{{ comment.user.full_name }}</h4></font>
+			<div style="text-align: right;">
+			{{comment.created_at}}分投稿
+			</div>
+			<div class="comment">
+                    <h4>{{ comment.text | linebreaksbr }}</h4>
+                </div>
+                <div>
+                {% if comment.image %}
+                {% if comment.imgcategory.name|stringformat:"s"  == "右" %}
+		<div style="text-align: right;">
+		<img src="{{comment.image.url}}" class="user">
+			</div>
+		{% elif  comment.imgcategory.name|stringformat:"s"  == "真ん中" %}
+		<div style="text-align: center;">
+		<img src="{{comment.image.url}}" class="user">
+			</div>
+		{% else %}
+		<img src="{{comment.image.url}}" class="user">
+		{% endif %}
+
+{% else %}
+{% endif %}
+</div>				
+                <div style="text-align: right;">
+                <p>
+                    <h5><a href="{% url 'posts:reply_create' comment.pk %}" rel="nofollow">返信する</a></h5>
+                </p>
+                </div>
+            </div>
+            {% if request.user == comment.user %}
+		<div style="text-align: right;">
+		<a href="{% url 'posts:commentdelete' pk=comment.pk %}">コメントを削除する</a>
+		</div>
+	{% else %}
+	{% endif %}
+            {% endif %}
+            
+         {% for reply in comment.reply_set.all %}
+         {% if reply.is_public %}
+                <font size="6">
+            	{% if reply.user == post.user %}
+				<div>
+				<h5>質問投稿者</h5>
+				</div>
+				{% endif %}
+                <div>
+            {% if reply.user.icon %}
+			<img src="{{ reply.user.icon.url }}" class="user-icon">
+			{% else %}
+			<img src="{% static 'images/black.png' %}" class="user-icon">
+			{% endif %}
+			<h4>{{ reply.user.full_name }}</h4></font>
+			<div style="text-align: right;">
+			{{reply.created_at}}分投稿
+			</div>
+			<div class="reply">
+                    <h4>{{ reply.text | linebreaksbr }}</h4>
+                </div>
+                    <div>
+				                {% if reply.image %}
+                {% if reply.imgcategory.name|stringformat:"s"  == "右" %}
+		<div style="text-align: right;">
+		<img src="{{reply.image.url}}" class="user">
+			</div>
+		{% elif reply.imgcategory.name|stringformat:"s"  == "真ん中" %}
+		<div style="text-align: center;">
+		<img src="{{reply.image.url}}" class="user">
+			</div>
+		{% else %}
+		<img src="{{reply.image.url}}" class="user">
+		{% endif %}
+
+{% else %}
+{% endif %}
+</div>
+                    <div style="text-align: right;">
+                    <h5><a href="{% url 'posts:reply_create' comment.pk %}" rel="nofollow">返信する</a></h5>
+                    </div>
+                </div>
+                {% if request.user == reply.user %}
+		<div style="text-align: right;">
+		<a href="{% url 'posts:replydelete' pk=reply.pk %}">返信を削除する</a>
+		</div>
+	{% else %}
+	{% endif %}
+                {% endif %}
+            {% endfor %}
+            <!-- リプライ一覧終わり -->
+
+        {% empty %}
+            <p>まだコメントはありません。</p>
+	{% endfor %}
+	{% if request.user == post.user %}
+		<br>
+		<div style="text-align: right;">
+		<a href="{% url 'posts:delete' pk=post.pk %}">この記事を削除する</a>
+		</div>
+	{% else %}
+	{% endif %}
+	
+	
+<style type="text/css">
+    	.user-icon {
+    	height: 50px;
+    	width: 50px;
+    	object-fit: cover;
+    	border-radius: 50%;
+    	border: 1.5px solid #eee;
+		}
+	</style>
+{% endblock %}

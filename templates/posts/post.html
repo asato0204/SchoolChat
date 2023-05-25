@@ -1,0 +1,79 @@
+{% extends "posts/post_base.html" %}
+
+{% load static %}
+{% block content %}
+	
+
+    
+    {% for post in posts %}
+    	{% if post.category|stringformat:"s"  == "その他" %}
+        <div class="others">
+        {% elif post.category|stringformat:"s"  == "データベース" %}
+        <div class="db">
+        {% elif post.category|stringformat:"s"  == "キャリアデザイン" %}
+        <div class="career">
+        {% elif post.category|stringformat:"s"  == "IoT" %}
+        <div class="iot">
+        {% elif post.category|stringformat:"s"  == "Java" %}
+        <div class="java">
+        {% elif post.category|stringformat:"s"  == "Python" %}
+        <div class="python">
+        {% elif post.category|stringformat:"s"  == "C言語" %}
+        <div class="c">
+        {% else %}
+        {% endif %}	
+        
+        	{% if post.complete %}
+            <div style="text-align: right;">
+			<img src="{% static 'images/mark_sumi_checked.png' %}" class="user-icon">
+			</div>
+			{% else %}
+            {% endif %}
+            <div class="question ">
+            <a href="{% url 'posts:detail' pk=post.pk %}"><h5>{{ post.title }}</h5>
+            	{{ post.category }}
+            	{{ post.created_at }}</a>
+            </div>
+            <div style="text-align: right;">
+        		<a href="{% url 'posts:detail' pk=post.pk %}">詳細</a>
+        	</div>
+        
+        </div>
+        <hr>
+    {% endfor %}
+        <style type="text/css">
+        .question a{
+        color: #000000;
+        }
+    	.user-icon {
+    	height: 50px;
+    	width: 50px;
+    	object-fit: cover;
+    	border-radius: 50%;
+    	border: 1.5px solid #eee;
+		}
+		.others {
+		background-color: #f0f8ff;
+		}
+		.db {
+		background-color: #ffffe0;
+		}
+		.career {
+		background-color: #e5a323;
+		}
+		.iot {
+		background-color: #7fffd4;
+		}
+		.java {
+		background-color: #fff0f5;
+		}
+		.python {
+		background-color: #f0fff0;
+		}
+		.c {
+		background-color: #dda0dd;
+		}
+
+		
+	</style>
+{% endblock %}

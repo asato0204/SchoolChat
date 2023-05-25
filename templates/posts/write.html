@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load bootstrap4 %}
+{% block body %}
+
+
+{% block content %}
+	
+	<div style="text-align: center;">
+	<h4>相談入力</h4>
+	</div>
+    <form method="post" action="{% url 'posts:write' %}" enctype="multipart/form-data">
+    	{% bootstrap_form form %}
+        {% csrf_token %}
+        
+        <button type="submit" class="button">投稿</button>
+    </form>
+    <div style="text-align: right;">
+    	<h5><a href="{% url 'posts:index' %}">一覧に戻る</a></h5>
+    </div>	
+{% endblock %}
+{% endblock %}
